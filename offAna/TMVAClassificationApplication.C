@@ -41,14 +41,14 @@ void TMVAClassificationApplication( TString myMethodList = "" )
    std::map<std::string,int> Use;
 
    // Cut optimisation
-   Use["Cuts"]            = 1;
+   Use["Cuts"]            = 0;
    Use["CutsD"]           = 0;
    Use["CutsPCA"]         = 0;
    Use["CutsGA"]          = 0;
    Use["CutsSA"]          = 0;
    //
    // 1-dimensional likelihood ("naive Bayes estimator")
-   Use["Likelihood"]      = 1;
+   Use["Likelihood"]      = 0;
    Use["LikelihoodD"]     = 0; // the "D" extension indicates decorrelated input variables (see option strings)
    Use["LikelihoodPCA"]   = 0; // the "PCA" extension indicates PCA-transformed input variables (see option strings)
    Use["LikelihoodKDE"]   = 0;
@@ -83,11 +83,11 @@ void TMVAClassificationApplication( TString myMethodList = "" )
    Use["MLPBNN"]          = 0; // Recommended ANN with BFGS training method and bayesian regulator
    Use["CFMlpANN"]        = 0; // Depreciated ANN from ALEPH
    Use["TMlpANN"]         = 0; // ROOT's own ANN
-   Use["DNN_CPU"] = 1;         // CUDA-accelerated DNN training.
+   Use["DNN_CPU"] = 0;         // CUDA-accelerated DNN training.
    Use["DNN_GPU"] = 0;         // Multi-core accelerated DNN.
    //
    // Support Vector Machine
-   Use["SVM"]             = 1;
+   Use["SVM"]             = 0;
    //
    // Boosted Decision Trees
    Use["BDT"]             = 1; // uses Adaptive Boost
@@ -97,7 +97,7 @@ void TMVAClassificationApplication( TString myMethodList = "" )
    Use["BDTF"]            = 0; // allow usage of fisher discriminant for node splitting
    //
    // Friedman's RuleFit method, ie, an optimised series of cuts ("rules")
-   Use["RuleFit"]         = 1;
+   Use["RuleFit"]         = 0;
    // ---------------------------------------------------------------
    Use["Plugin"]          = 0;
    Use["Category"]        = 0;
@@ -142,7 +142,7 @@ void TMVAClassificationApplication( TString myMethodList = "" )
    reader->AddVariable( "myvar1 := var1", &var1 );
    reader->AddVariable( "myvar2 := var2", &var2 );
    reader->AddVariable( "var3",           &var3 );
-   reader->AddVariable( "var4",           &var4 );
+//    reader->AddVariable( "var4",           &var4 );
 
    // Spectator variables declared in the training have to be added to the reader, too
    Float_t spec1,spec2;
@@ -153,13 +153,13 @@ void TMVAClassificationApplication( TString myMethodList = "" )
    if (Use["Category"]){
       // Add artificial spectators for distinguishing categories
       reader->AddSpectator( "Category_cat1 := var3<=0",             &Category_cat1 );
-      reader->AddSpectator( "Category_cat2 := (var3>0)&&(var4<0)",  &Category_cat2 );
-      reader->AddSpectator( "Category_cat3 := (var3>0)&&(var4>=0)", &Category_cat3 );
+    //   reader->AddSpectator( "Category_cat2 := (var3>0)&&(var4<0)",  &Category_cat2 );
+    //   reader->AddSpectator( "Category_cat3 := (var3>0)&&(var4>=0)", &Category_cat3 );
    }
 
    // Book the MVA methods
 
-   TString dir    = "dataset_Kion/weights/";
+   TString dir    = "/mnt/e/sphenix/jingyuana/MVA-EID/offAna/dataset_allN_cutpt6_12_embed/weights/";
    TString prefix = "TMVAClassification";
 
    // Book method(s)
@@ -269,7 +269,7 @@ void TMVAClassificationApplication( TString myMethodList = "" )
    //
    TFile *input(0);
    // TString fname = "/mnt/f/sPHSimu/sPHENIX/MVA/data/tmva_class_example.root";
-   TString fname = "/mnt/f/sPHSimu/sPHENIX/MVA/data/MVAdata_4vars.root";
+   TString fname = "/mnt/e/sphenix/jingyuana/MVA-EID/file/data0/MVAdata_7vars_e3x3_cutpt2_12.root";
    if (!gSystem->AccessPathName( fname )) {
       input = TFile::Open( fname ); // check if file in local directory exists
    }
@@ -297,7 +297,7 @@ void TMVAClassificationApplication( TString myMethodList = "" )
    theTree->SetBranchAddress( "var1", &userVar1 );
    theTree->SetBranchAddress( "var2", &userVar2 );
    theTree->SetBranchAddress( "var3", &var3 );
-   theTree->SetBranchAddress( "var4", &var4 );
+//    theTree->SetBranchAddress( "var4", &var4 );
 
    // Efficiency calculator for cut method
    Int_t    nSelCutsGA = 0;

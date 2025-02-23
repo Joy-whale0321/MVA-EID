@@ -106,7 +106,7 @@ int TMVAClassification( TString myMethodList = "" )
    Use["BDTF"]            = 0; // allow usage of fisher discriminant for node splitting
    //
    // Linear Discriminant Analysis
-   Use["LD"]              = 1; // Linear Discriminant identical to Fisher
+   Use["LD"]              = 0; // Linear Discriminant identical to Fisher
    Use["Fisher"]          = 0;
    Use["FisherG"]         = 0;
    Use["BoostedFisher"]   = 0; // uses generalised MVA method boosting
@@ -121,7 +121,7 @@ int TMVAClassification( TString myMethodList = "" )
    Use["FDA_MCMT"]        = 0;
    //
    // Neural Networks (all are feed-forward Multilayer Perceptrons)
-   Use["MLP"]             = 1; // Recommended ANN
+   Use["MLP"]             = 0; // Recommended ANN
    Use["MLPBFGS"]         = 0; // Recommended ANN with optional training method
    Use["MLPBNN"]          = 0; // Recommended ANN with BFGS training method and bayesian regulator
    Use["CFMlpANN"]        = 0; // Depreciated ANN from ALEPH
@@ -133,13 +133,13 @@ int TMVAClassification( TString myMethodList = "" )
 #endif
 
 #ifdef R__HAS_TMVACPU
-   Use["DNN_CPU"]         = 1; // Multi-core accelerated DNN.
+   Use["DNN_CPU"]         = 0; // Multi-core accelerated DNN.
 #else
-   Use["DNN_CPU"]         = 1;
+   Use["DNN_CPU"]         = 0;
 #endif
    //
    // Support Vector Machine
-   Use["SVM"]             = 1;
+   Use["SVM"]             = 0;
    //
    // Friedman's RuleFit method, ie, an optimised series of cuts ("rules")
    Use["RuleFit"]         = 0;
@@ -192,7 +192,7 @@ int TMVAClassification( TString myMethodList = "" )
       //  TString fname = "/mnt/f/sPHSimu/sPHENIX/MVA/data2/MVAdata_7vars_e3x3_cutpt5_8_embed.root";// the first 3 vars are used
        // TString fname = "/mnt/f/sPHSimu/sPHENIX/MVA/data2/MVAdata_7vars_e3x3_cutpt8_12_embed.root";// the first 3 vars are used
        // TString fname = "/mnt/f/sPHSimu/sPHENIX/MVA/data2/MVAdata_7vars_e3x3_cutpt2_6_embed.root";// the first 3 vars are used
-         TString fname = "/mnt/f/sPHSimu/sPHENIX/MVA/data2/MVAdata_7vars_e3x3_cutpt6_12_embed.root";// the first 3 vars are used
+         TString fname = "/mnt/e/sphenix/jingyuana/MVA-EID/file/data0/MVAdata_7vars_e3x3_cutpt2_12.root";// the first 3 vars are used
   
   
   
@@ -261,7 +261,7 @@ int TMVAClassification( TString myMethodList = "" )
      // TString outfileName( "/mnt/f/sPHSimu/sPHENIX/MVA/TMVAClassification/training_output/TMVA_allN_cutpt5_8_embed.root" );//weihu
      // TString outfileName( "/mnt/f/sPHSimu/sPHENIX/MVA/TMVAClassification/training_output/TMVA_allN_cutpt8_12_embed.root" );//weihu
      //TString outfileName( "/mnt/f/sPHSimu/sPHENIX/MVA/TMVAClassification/training_output/TMVA_allN_cutpt2_6_embed.root" );//weihu
-       TString outfileName( "/mnt/f/sPHSimu/sPHENIX/MVA/TMVAClassification/training_output/TMVA_allN_cutpt6_12_embed.root" );//weihu
+       TString outfileName( "/mnt/e/sphenix/jingyuana/MVA-EID/file/output0/TMVA_allN_cutpt2_12.root" );//weihu
   
     //  TString outfileName( "/mnt/f/sPHSimu/sPHENIX/MVA/TMVAClassification/training_output/TMVA_allP_cutpt2_12_embed.root" );//weihu
      // TString outfileName( "/mnt/f/sPHSimu/sPHENIX/MVA/TMVAClassification/training_output/TMVA_allP_cutpt2_5_embed.root" );//weihu
@@ -290,7 +290,7 @@ int TMVAClassification( TString myMethodList = "" )
   // TMVA::DataLoader *dataloader=new TMVA::DataLoader("dataset_allN");//weihu
   // TMVA::DataLoader *dataloader=new TMVA::DataLoader("dataset_allP_cutpt2_12");//weihu
   // TMVA::DataLoader *dataloader=new TMVA::DataLoader("dataset_allP_cutpt2_6");//weihu
-  // TMVA::DataLoader *dataloader=new TMVA::DataLoader("dataset_allP_cutpt6_12");//weihu
+  // TMVA::DataLoader *dataloader=new TMVA::DataLoader("dataset_allP_cutpt6_12");//weihu                                         
   // TMVA::DataLoader *dataloader=new TMVA::DataLoader("dataset_allP_cutpt2_5");//weihu
    //TMVA::DataLoader *dataloader=new TMVA::DataLoader("dataset_allP_cutpt5_8");//weihu
   // TMVA::DataLoader *dataloader=new TMVA::DataLoader("dataset_allP_cutpt8_12");//weihu
