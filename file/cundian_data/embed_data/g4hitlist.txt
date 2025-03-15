@@ -1,0 +1,365 @@
+https://wiki.sphenix.bnl.gov/index.php/MDC2_2022
+MDC2 2022
+Jump to navigation
+Jump to search
+Contents
+
+    1 Google Docs with Info
+    2 Software
+        2.1 Where is/are
+    3 Simulation Run Plan
+        3.1 Before Run5
+        3.2 Run40
+    4 Code To do
+        4.1 G4
+    5 Requested Samples
+        5.1 General samples
+        5.2 JS TG
+        5.3 Heavy Flavor TG
+    6 Access Samples
+    7 Old Information for reference
+        7.1 Old requested samples (Run 4)
+            7.1.1 Jet Structure
+            7.1.2 HF
+        7.2 Au+Au samples
+            7.2.1 Minbias (~XXX events)
+                7.2.1.1 pass1: Geant4 simulation of sHijing
+                7.2.1.2 pass2: 50kHz pileup generation
+                7.2.1.3 pass3calo: processing of calo data
+                7.2.1.4 pass3trk: tracking pre-pass
+                7.2.1.5 pass4trk: tracking and vertex reconstruction with ACTS
+                7.2.1.6 pass3distort:
+            7.2.2 0--10% centrality (XXX events)
+        7.3 Location p+p samples
+
+Google Docs with Info
+
+    Tasks available for grabs
+    Calibrations Task force
+
+Software
+
+    Tutorial(with recordings): here
+
+Where is/are
+
+    Git area: [1]
+    Gen-reco chain: splitted into X separate steps [2]
+    Setup Hijing:https://github.com/sPHENIX-Collaboration/MDC2......./blob/main/generators/sHijing/sHijing_0-12fm.xml
+    Centrality-b correspondence (from Ran's study and Dennis's email on Dec 4th, 2020 -- might change slightly depending on the Glauber implementation or assumed sigma_NN in Hijing).
+
+0 - 4.88 => 0-10% ;
+
+4.88 - 6.81=>10-20% ;
+
+6.81 - 8.40=>20-30% ;
+
+8.40 - 9.71=> 30-40% ;
+
+9.71 - 10.81 => 40-50% ;
+
+10.81 - 11.84 => 50-60% ;
+
+11.84 - 12.76 => 60-70% ;
+
+12.76 - 13.68 => 70 -80% ;
+
+13.68 - 14.65 => 80 -90% ;
+Simulation Run Plan
+
+ongoing, done, planned, ongoing, run=40 with preliminary new build, done, run=40 with preliminary new build
+Before Run5
+
+    FTFP_BERT_HP physics list G4 hit comparison
+
+Run40
+
+This will be replaced by run 5 once the geometry is settled
+
+    20M MB hijing (0-20fm) production link https://github.com/sPHENIX-Collaboration/MDC2/tree/main/submit/fm_0_20
+    1M MB hijing (0-20fm) without pileup production link https://github.com/sPHENIX-Collaboration/MDC2/tree/main/submit/fm_0_20
+    50M c cbar embedded in pp pile up production link (production type: Charm) https://github.com/sPHENIX-Collaboration/MDC2/tree/main/submit/HF_pp200_signal
+    50M b bbar embedded in pp pile up production link (production type: Bottom) https://github.com/sPHENIX-Collaboration/MDC2/tree/main/submit/HF_pp200_signal
+    10 Million high pT (30 GeV) pythia8 Jets (q^2 = 25^2): production link (production type: Jet30) https://github.com/sPHENIX-Collaboration/MDC2/tree/main/submit/JS_pp200_signal
+    1 Million inclusive (10 GeV) pythia8 jets (q^2 = 7^2): production link (production type: Jet10) https://github.com/sPHENIX-Collaboration/MDC2/tree/main/submit/JS_pp200_signal
+    10 Million high pT (30 GeV) pythia8 embedded jets (q^2 = 25^2): production link (production type: Jet30) https://github.com/sPHENIX-Collaboration/MDC2/tree/main/submit/JS_pp200_signal
+    1 Million inclusive (10 GeV) pythia8 embedded jets (q^2 = 7^2): production link (production type: Jet10) https://github.com/sPHENIX-Collaboration/MDC2/tree/main/submit/JS_pp200_signal
+    2 Million photon-jet pythia8 jets (q^2 = 25^2): production link (production type: PhotonJet) https://github.com/sPHENIX-Collaboration/MDC2/tree/main/submit/JS_pp200_signal
+    2 Million photon-jet pythia8 embedded jets (q^2 = 25^2): production link (production type: PhotonJet) https://github.com/sPHENIX-Collaboration/MDC2/tree/main/submit/JS_pp200_signal
+
+Code To do
+G4
+
+hcal tower geometry
+
+for pp: EvtGen decayer
+Requested Samples
+General samples
+
+    FTFP_BERT_HP physics list comparison
+        1k MB hijing simulation, full detector, Geant4 pass-only. It will be used for specialized study of late-neutron signal for tracker and calorimeter based on G4-truth hit/particle output.
+        Contact: Tim Rinn/Jin Huang
+
+JS TG
+
+Samples requested by the JS TG: (in order of priority):
+
+10 Million high pT pythia8 Jets: (using same configurations and triggers as previously)
+1 Million inclusive pythia8 jets: (using the same configuration as requested by the HF Jet group)
+10 Million high pT pythia8 embedded jets: (using same configurations and triggers as previously)
+1 Million inclusive pythia8 embedded jets: (using the same configuration as requested by the HF Jet group)
+2 Million photon-jet pythia8 jets:
+2 Million photon-jet pythia8 embedded jets:
+
+
+Lower Priority:
+40 Million high pT pythia8 embedded jets: (combines with the earlier request to produce the full 50 million event sample)
+Heavy Flavor TG
+
+Priorities:
+
+1: As soon as practical 2: Launched by end of summer 3: Opportunistic
+Collision Species 	Process 	Generator 	No. Events Requested 	No. Events In Storage 	Notes 	Priority
+pp 	min-bias 	Pythia8 	50M 	0 		2
+pp 	c-cbar 	Pythia8 	50M 	0 		1
+pp 	b-bbar 	Pythia8 	50M 	0 		2
+pp 	Beauty jets 	Pythia8 	100k 	0 		1
+pp 	Charm jets 	Pythia8 	1M 	0 		3
+pp 	D0 jets 	Pythia8 	1M 	0 	Use production option "JetD0" https://github.com/sPHENIX-Collaboration/calibrations/blob/master/Generators/HeavyFlavor_TG/phpythia8_jets_d02kpi_MDC2.cfg 	1
+pp 	Beauty jets 	Pythia8 	900k 	0 		3
+pp 	Inclusive jets 	Pythia8 	50M 	0 		3
+AuAu 	min-bias 	HiJing 	5k 	0 	With clusters for tracklet analysis (probably for Bulk TG) 	2
+pp 	min-bias 	Pythia8 	500k 	0 	With hits for trigger study 	2
+pp 	D0 -> Kpi 	Pythia8 	100k 	0 	With hits for trigger study 	2
+pp 	c-cbar 	Pythia8 	500k 	0 	With hits for trigger study 	3
+pp 	b-bbar 	Pythia8 	500k 	0 	With hits for trigger study 	3
+pp 	D0->Kpi 	Pythia8 	1M 	0 	https://github.com/sPHENIX-Collaboration/calibrations/blob/master/Generators/HeavyFlavor_TG/phpythia8_d02kpi_MDC2.cfg 	3
+pp 	D+(s)->KKpi 	Pythia8 	1M 	0 	https://github.com/sPHENIX-Collaboration/calibrations/blob/master/Generators/HeavyFlavor_TG/phpythia8_dplus2kkpi_MDC2.cfg 	3
+pp 	Lambda_c->pKpi 	Pythia8 	1M 	0 	https://github.com/sPHENIX-Collaboration/calibrations/blob/master/Generators/HeavyFlavor_TG/phpythia8_lambdac2pkpi_MDC2.cfg 	3
+pp 	J/psi & psi(2S) -> l+ l- 	Pythia8 	1M 	0 	https://github.com/sPHENIX-Collaboration/calibrations/blob/master/Generators/HeavyFlavor_TG/phpythia8_charmonium2ll_MDC2.cfg 	3
+pp 	b->D X 	Pythia8 	2M 	0 	https://github.com/sPHENIX-Collaboration/calibrations/blob/master/Generators/HeavyFlavor_TG/phpythia8_b2DX_MDC2.cfg 	3
+pp 	b->J/psi X 	Pythia8 	3M 	0 	https://github.com/sPHENIX-Collaboration/calibrations/blob/master/Generators/HeavyFlavor_TG/phpythia8_b2JpsiX_MDC2.cfg 	3
+Access Samples
+
+To create file lists from our file catalog for use in analysis macros you can use
+
+ CreateFileList.pl
+
+which is installed centrally. Without args it prints out a quick usage summary, the file types may vary depending on what we have. Currently use -run 40 but run=4 is still somewhat available but you should not use it (different g4 version, more outdated geometry, no tracks). It gets updated frequently to add new things, just enter:
+
+ CreateFileList.pl
+
+Different productions (means different GEANT4 configurations) are stored as different runs. Right now you can get
+
+ --run 40  default setting: old geometric hcals (use Enable::HCALIN_OLD = true; Enable::HCALOUT_OLD = true;)
+ --run 50  gdml based hcals (default, but not up to date gdml files)
+
+to get the up to date options. As of 9/14/2022 you get the following:
+
+ usage: CreateFileLists.pl -type <production type> <filetypes>
+ parameters:
+ -embed : pp embedded into hijing (only for pp types)
+ -l     : last segment
+ -n    : <number of events>
+ -nopileup : without pileup
+ -rand : randomize segments used
+ -run  : runnumber
+ -s    : <starting segment>
+ -type : production type
+   1 : hijing (0-12fm) pileup 0-12fm DELETED
+   2 : hijing (0-4.88fm) pileup 0-12fm DELETED
+   3 : pythia8 pp MB
+   4 : hijing (0-20fm) pileup 0-20fm
+   5 : hijing (0-12fm) pileup 0-20fm DELETED
+   6 : hijing (0-4.88fm) pileup 0-20fm
+   7 : HF pythia8 Charm
+   8 : HF pythia8 Bottom
+   9 : HF pythia8 Charm D0
+   10 : HF pythia8 Bottom D0
+   11 : JS pythia8 Jet ptmin = 30GeV
+   12 : JS pythia8 Jet ptmin = 10GeV
+   13 : JS pythia8 Photon Jet
+   14 : Single Particles
+   15 : Special Productions
+
+ -pileup : pileup rate selection (default = 1)
+     1 : 50kHz for Au+Au, 3MHz for p+p (default)
+     2 : 25kHz for Au+Au
+     3 : 10kHz for Au+Au
+ 
+ Single particle mandatory options:
+   -particle : G4 particle name
+   -pmin : minimum momentum (in MeV/c)
+   -pmax : maximum momentum (in MeV/c)
+
+ Special production mandatory options:
+   -production : production name
+
+ available file types (choose at least one, --> means: written to):
+ DST_BBC_G4HIT  --> dst_bbc_g4hit.list
+ DST_CALO_CLUSTER  --> dst_calo_cluster.list
+ DST_CALO_G4HIT  --> dst_calo_g4hit.list
+ DST_TRACKS  --> dst_tracks.list
+ DST_TRACKSEEDS  --> dst_trackseeds.list
+ DST_TRKR_CLUSTER  --> dst_trkr_cluster.list
+ DST_TRKR_G4HIT  --> dst_trkr_g4hit.list
+ DST_TRKR_HIT  --> dst_trkr_hit.list
+ DST_TRKR_HIT_DISTORT  --> dst_trkr_hit_distort.list
+ DST_TRUTH  --> dst_truth.list
+ DST_TRUTH_DISTORT  --> dst_truth_distort.list
+ DST_TRUTH_G4HIT  --> dst_truth_g4hit.list
+ DST_TRUTH_JET  --> dst_truth_jet.list
+ DST_VERTEX  --> dst_vertex.list
+ G4Hits  --> g4hits.list
+
+If you want to combine file types (e.g. analyze calo clusters and tracks together), put all types on the command line. E.g.
+
+ CreateFileList.pl -type 4 -run 40 DST_CALO_CLUSTER DST_TRACKS -s 300
+
+will create two lists, dst_calo_cluster.list and dst_tracks.list with matching segments for our 0-20fm dataset, starting with segment 300. If you give the number of events with -n <number of events> it will stop adding new files to the list when the requested number of events is reached. Though you can also limit the number of events in your Fun4All macro
+Old Information for reference
+Old requested samples (Run 4)
+
+ongoing, done
+
+ 20M MB hijing (0-20fm)  production link https://github.com/sPHENIX-Collaboration/MDC2/tree/main/submit/fm_0_20
+ 10M central hijing (0-4.88fm) production link https://github.com/sPHENIX-Collaboration/MDC2/tree/main/submit/fm_0_488
+ 10M MB pp  production link https://github.com/sPHENIX-Collaboration/MDC2/tree/main/submit/pythia8_pp_mb
+
+Jet Structure
+
+ 50M dijet  events, q^2 = (20 GeV)^2 with 30 GeV jet trigger production link (use Jet04 as flag) https://github.com/sPHENIX-Collaboration/MDC2/tree/main/submit/JS_pp200_signal
+ 1-3M gamma-jet
+
+HF
+
+ 50M c-cbar  production link (use Charm as flag) https://github.com/sPHENIX-Collaboration/MDC2/tree/main/submit/HF_pp200_signal
+ 50M b-bbar  production link (use Bottom as flag) https://github.com/sPHENIX-Collaboration/MDC2/tree/main/submit/HF_pp200_signal
+ 1M c-jet
+ 1M b-jet
+ 50M inclusive jet
+ 1M d-zero --> k- + pi+
+ 1M d+ --> k- + pi+ + pi+
+ 1M lamda_c+ --> p + K- + pi+
+ 2M J/Psi --> lepton-lepton
+ 5M b --> D-X
+ 3M b --> J/Psi X
+ 100M MB pp production link https://github.com/sPHENIX-Collaboration/MDC2/tree/main/submit/pythia8_pp_mb
+
+Au+Au samples
+Minbias (~XXX events)
+pass1: Geant4 simulation of sHijing
+
+    Each file contains 100 events
+    output (G4Hits of all active detectors), written to /sphenix/data/XXX
+
+pass2: 50kHz pileup generation
+
+    Output is split into 4 files
+
+    DST_BBC_G4HIT_sHijing_0_12fm contains bbc and epd G4Hits
+    DST_CALO_G4HIT_sHijing_0_12fm contains all calorimeter G4Hits
+    DST_TRKR_G4HIT_sHijing_0_12fm contains tracking detector G4Hits
+    DST_TRUTH_G4HIT_sHijing_0_12fm contains the truth info (and HepMC records and black hole hits)
+
+    Each file contains about 50 events.
+    Output written to /sphenix/data/data02/XXX
+
+pass3calo: processing of calo data
+
+    Input from DST_CALO_GHITS files; towers (all flavors) and clusters are saved.
+        Note: I tried the topo clusters but it ran out of memory (I killed it as it reached 40GB).
+    Output written to /sphenix/data/XXX
+
+pass3trk: tracking pre-pass
+
+    TPC electron drift and clustering, silicon g4hit clustering and silicon seeds from truth info using DST_TRKR_G4HIT and DST_TRKR_G4HIT files.
+        Note: Saves clusters for the tracking
+    Output written to /sphenix/data/XXX
+
+pass4trk: tracking and vertex reconstruction with ACTS
+
+    Note: includes also rave vertex
+    Output at /sphenix/data/data02/sphnxpro/MDC1/sHijing_HepMC/Tracks/data
+
+pass3distort:
+
+    Note:
+    Output at /sphenix/data/
+
+0--10% centrality (XXX events)
+
+    Note: central means b=0-4.88fm setting in Hijing, corresponding to 0-10%
+
+Location p+p samples
+Navigation menu
+
+    Weihuma
+    Talk
+    Preferences
+    Watchlist
+    Contributions
+    Log out
+
+    Page
+    Discussion
+
+    Read
+    Edit
+    Edit source
+    View history
+    Watch
+
+More
+
+Search
+
+    Main page
+    Community portal
+    Current events
+    Recent changes
+    Random page
+    Help
+
+sPHENIX detector
+
+    Magnet
+    EMCAL
+    HCAL
+    Tracking
+    TPC
+    MVTX
+    INTT
+    Electronics
+    Beam tests
+    Software
+    DAQ
+    Trigger
+
+Collaboration
+
+    Meetings
+    Listservers
+    Speakers Bureau
+    Juniors
+    Document database
+
+Tools
+
+    What links here
+    Related changes
+    Upload file
+    Special pages
+    Printable version
+    Permanent link
+    Page information
+    Cite this page
+
+    This page was last edited on 19 October 2022, at 13:32.
+
+    Privacy policy
+    About sPHENIX
+    Disclaimers
+
+    Powered by MediaWiki
+

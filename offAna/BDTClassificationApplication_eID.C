@@ -428,6 +428,7 @@ void BDTClassificationApplication_eID( TString myMethodList = "" )
             float dR   = TMath::Sqrt(m_cemcdphi*m_cemcdphi + m_cemcdeta*m_cemcdeta);
             float pt   = m_tr_pt;
 
+            // all entries distribution
             h1pt->Fill(pt);
             //h1EOP->Fill(EOP);
             h1EcOP->Fill(EOP); // ??? EcOP?
@@ -435,61 +436,118 @@ void BDTClassificationApplication_eID( TString myMethodList = "" )
             h1CEMCchi2->Fill(cemc_chi2);
  
             // flavor? pid?
-            if(gflavor2==11) N_raw=N_raw+1;
+            if(gflavor2==11) N_raw=N_raw+1; // all electron
  
             if(gflavor2==11 && EOP>0.0 && EOP<20.0 && HOM>0.0 && HOM<20.0 && nmvtx>0 && nintt>0 && ntpc>20 && quality<10) 
             {
-                N_track=N_track+1;
+                N_track=N_track+1; // good track electron ?
             }
  
             if(EOP>0.0 && EOP<20.0 && HOM>0.0 && HOM<20.0 && nmvtx>0 && nintt>0 && ntpc>20 && quality<10 && pt>2.0 && pt<=12.0) 
             {
-                h1EOP->Fill(EOP);
+                h1EOP->Fill(EOP); 
             }
             
-            if((gflavor2==11 or gflavor2==-2212 or gflavor2==-211 or gflavor2==-321) && nmvtx>0 && nintt>0 && quality<10 && (TMath::Abs(m_tr_eta)<=1.1) && EOP>0.0 && EOP<20.0 && HOM>0.0 && HOM<20.0 && pt>2.0 && pt<=13.0 && ntpc>20 && ntpc<=48 && cemc_prob>0.0 && cemc_prob<=1.0 && cemc_chi2>0.0 && cemc_chi2<20.0) 
+            if((gflavor2==11 or gflavor2==-2212 or gflavor2==-211 or gflavor2==-321) && nmvtx>0 && nintt>0 && quality<10 && (TMath::Abs(m_tr_eta)<=1.1) && EOP>0.0 && EOP<20.0 && HOM>0.0 && HOM<20.0 && pt>2.0 && pt<=13.0 && ntpc>20 && ntpc<=48 && cemc_prob>0.0 && cemc_prob<=1.0 && cemc_chi2>0.0 && cemc_chi2<20.0) // good reco e pion proton
             {
-                if(gflavor2==11) N_track_pt2=N_track_pt2+1;
+                if(gflavor2==11) N_track_pt2=N_track_pt2+1; // good track electron ?
  
-                if(TMath::Abs(gflavor2)==11) 
+                if(TMath::Abs(gflavor2)==11) // good reco e+-
                 {
                     h1EOP_e->Fill(EOP);
                     h1HOM_e->Fill(HOM);
                     h1CEMCchi2_e->Fill(cemc_chi2);
                     h1pt_cut->Fill(pt);
                 }
-                h1flavor_1->Fill(gflavor2);
+                h1flavor_1->Fill(gflavor2); // good reco particle id
 
                 var1 = EOP;
                 var2 = HOM;
                 var3 = cemc_chi2;
 
+                // R_N -> R_1
                 if (Use["BDT"          ])   histBdt    ->Fill( reader->EvaluateMVA( "BDT method"           ) );
                 if (Use["BDTG"         ])   histBdtG   ->Fill( reader->EvaluateMVA( "BDTG method"          ) );
                 if (Use["BDTB"         ])   histBdtB   ->Fill( reader->EvaluateMVA( "BDTB method"          ) );
                 if (Use["BDTD"         ])   histBdtD   ->Fill( reader->EvaluateMVA( "BDTD method"          ) );
                 if (Use["BDTF"         ])   histBdtF   ->Fill( reader->EvaluateMVA( "BDTF method"          ) );
             
-                if(TMath::Abs(gflavor2)==11) NSall=NSall+1;
-                if(TMath::Abs(gflavor2)==11) Nelectron=Nelectron+1;
-                if(TMath::Abs(gflavor2)==211) Npion=Npion+1;
-                if(TMath::Abs(gflavor2)==2212) Nantiproton=Nantiproton+1;
-                if(TMath::Abs(gflavor2)==2212 or TMath::Abs(gflavor2)==211 or TMath::Abs(gflavor2)==321) Nall=Nall+1;
+                if(TMath::Abs(gflavor2)==11) NSall=NSall+1; // signal counts
+                if(TMath::Abs(gflavor2)==11) Nelectron=Nelectron+1; // electron counts
+                if(TMath::Abs(gflavor2)==211) Npion=Npion+1; // pion counts
+                if(TMath::Abs(gflavor2)==2212) Nantiproton=Nantiproton+1; // anti-proton counts
+                if(TMath::Abs(gflavor2)==2212 or TMath::Abs(gflavor2)==211 or TMath::Abs(gflavor2)==321) Nall=Nall+1; // all bkg counts
                 
-                if(TMath::Abs(gflavor2)==11 && var1>0.912 && var2<0.2) Nelectron_cuts=Nelectron_cuts+1; //traditional cuts: 3 vars：var1>0.908 & var2<0.2; 4 vars：var1>0.909 & var2<0.2; embed var1>0.912 & var2<0.2
+                //traditional cuts: 3 vars：var1>0.908 & var2<0.2; 4 vars：var1>0.909 & var2<0.2; embed var1>0.912 & var2<0.2
+                if(TMath::Abs(gflavor2)==11 && var1>0.912 && var2<0.2) Nelectron_cuts=Nelectron_cuts+1; // traditional cut electron counts
                 
+                for(int i=0;i<5;i++)
+                {
+                    Nbimp[i]=4.0*i+2.0;
+                    err_Nbimp[i]=2.0;
+                    if((TMath::Abs(gflavor2)==2212 or TMath::Abs(gflavor2)==211 or TMath::Abs(gflavor2)==321) && (bimp2>=Nbimp[i]-2.0) && bimp2<(Nbimp[i]+2.0)) Nall_bimp[i]=Nall_bimp[i]+1;
+                } 
+
+                for(int i=0;i<5;i++)
+                {
+                    if(var1>0.912 && var2<0.2) // 90% 3 vars：var1>0.908 & var2<0.2; 4 vars：var1>0.909 & var2<0.2;
+                    {
+                        Nbimp[i]=4.0*i+2.0;
+                        if((TMath::Abs(gflavor2)==2212 or TMath::Abs(gflavor2)==211 or TMath::Abs(gflavor2)==321) && (bimp>=Nbimp[i]-2.0) && bimp<(Nbimp[i]+2.0)) 
+                        {   
+                            nall_cuts_bimp[i]=nall_cuts_bimp[i]+1;
+                        }
+                         
+                    } 
+                }
+                ////////////////////////////////////////////
+                for(int i=0;i<10;i++)
+                {
+                    Npt[i]=2.0*i+2.0;
+                    err_Npt[i]=1.0;
+                    if((TMath::Abs(gflavor2)==2212 or TMath::Abs(gflavor2)==211 or TMath::Abs(gflavor2)==321) && (pt>=Npt[i]-1.0) && pt<(Npt[i]+1.0)) Nall_pt[i]=Nall_pt[i]+1;
+                } 
+               
+                /////////////////////////////
+                for(int i=0;i<10;i++)
+                {
+                    if(var1>0.912 && var2<0.2) //90%  3 vars：var1>0.908 & var2<0.2; 4 vars：var1>0.909 & var2<0.2; embed var1>0.912 & var2<0.2
+                    {
+                        Npt[i]=2.0*i+2.0;
+                        if((TMath::Abs(gflavor2)==2212 or TMath::Abs(gflavor2)==211 or TMath::Abs(gflavor2)==321) && (pt>=Npt[i]-1.0) && pt<(Npt[i]+1.0)) 
+                        {
+                            nall_cuts_pt[i]=nall_cuts_pt[i]+1;
+                        }
+                       
+                    } 
+                }
+                 
+                for(int i=0;i<10;i++)
+                {
+                    pt_point[i]=i*2.0+2.0;
+                    if(pt>(pt_point[i]-1.0) && pt<(pt_point[i]+1.0) )
+                    {
+                        if(gflavor2==11) N_electron_pt_cuts[i]=N_electron_pt_cuts[i]+1;
+                        if(var1>0.912 && var2<0.2)
+                        {
+                            if(gflavor2==11) NEID_electron_pt_cuts[i]=NEID_electron_pt_cuts[i]+1;               
+                        }
+                    }
+                }
+
+
                 // --------------------------------------------------------------------------------------------------
                 if (Use["BDT"]) 
                 {
-                    float select=reader->EvaluateMVA("BDT method");
+                    float select=reader->EvaluateMVA("BDT method"); // BDT eval
                     //std::cout <<"BDT select= " << select<< std::endl;
                     if(TMath::Abs(gflavor2)==11)  h1electron_BDT->Fill(select); // e 的 BDT eval
-                    if(TMath::Abs(gflavor2)==11)  h1Sall_BDT->Fill(select); // e 的 BDT eval
+                    if(TMath::Abs(gflavor2)==11)  h1Sall_BDT->Fill(select); // Signal 的 BDT eval
                     if(TMath::Abs(gflavor2)==211) h1background_pion_BDT->Fill(select); // 211 的 BDT eval
                     if(TMath::Abs(gflavor2)==2212)h1background_antiproton_BDT->Fill(select); // 2212 的 BDT eval
-                    if(TMath::Abs(gflavor2)==2212 or TMath::Abs(gflavor2)==211 or TMath::Abs(gflavor2)==321) h1background_all_BDT->Fill(select); // 2212 211 321的 BDT eval
+                    if(TMath::Abs(gflavor2)==2212 or TMath::Abs(gflavor2)==211 or TMath::Abs(gflavor2)==321) h1background_all_BDT->Fill(select); // all bkg 2212 211 321的 BDT eval
                     
-                if(select>-0.39 && select<-0.35)
+                    if(select>-0.39 && select<-0.35) // 这啥cut呀？
                     {
                         h1flavor_2->Fill(gflavor2);  
                         h1var1_EOP_2->Fill(var1);
@@ -499,7 +557,7 @@ void BDTClassificationApplication_eID( TString myMethodList = "" )
                         h1_pt_2->Fill(pt);
                         h1_Eemcal3x3_2->Fill(m_cemce3x3);
                     }
-                if(select>-0.49 && select<-0.43)
+                    if(select>-0.49 && select<-0.43) // 这啥cut呀？
                     {
                         // h1flavor_1->Fill(gflavor2);
                         h1var1_EOP_1->Fill(var1);
@@ -510,15 +568,16 @@ void BDTClassificationApplication_eID( TString myMethodList = "" )
                         h1_Eemcal3x3_1->Fill(m_cemce3x3);
                     }
        
-                    if(TMath::Abs(gflavor2)==11)
+                    if(TMath::Abs(gflavor2)==11) // electron BDT eval - pt, EOP, HOM, cemc_chi2
                     {
                         h2_reponse_pt->Fill(select,pt);
                         h2_reponse_EOP->Fill(select,EOP);
                         h2_reponse_HOM->Fill(select,HOM);
                         h2_reponse_chi2->Fill(select,cemc_chi2);
                     }
-       
-                    if(TMath::Abs(gflavor2)==11 && select>0.1431) Nelectron_BDT=Nelectron_BDT+1;  //3 vars：select>0.1355; 4vars: select>0.138; embed: select>0.1431
+                    
+                    //3 vars：select>0.1355; 4vars: select>0.138; embed: select>0.1431
+                    if(TMath::Abs(gflavor2)==11 && select>0.1431) Nelectron_BDT=Nelectron_BDT+1; // BDT electron counts
        
                     for(int i=0;i<10;i++)
                     {
@@ -526,13 +585,9 @@ void BDTClassificationApplication_eID( TString myMethodList = "" )
                         {
                             Npt[i]=2.0*i+2.0;
                             if((TMath::Abs(gflavor2)==2212 or TMath::Abs(gflavor2)==211 or TMath::Abs(gflavor2)==321) && (pt>=Npt[i]-1.0) && pt<(Npt[i]+1.0)) //plot for all
-                            // if((TMath::Abs(gflavor2)==211) & (pt>=Npt[i]-1.0) & pt<(Npt[i]+1.0))   //plot for pi-
-                            // if((TMath::Abs(gflavor2)==321) & (pt>=Npt[i]-1.0) & pt<(Npt[i]+1.0))   //plot for K-
-                            // if((TMath::Abs(gflavor2)==2212) & (pt>=Npt[i]-1.0) & pt<(Npt[i]+1.0))  //plot for antiprotpn
                             { 
-                                nall_BDT_pt[i]=nall_BDT_pt[i]+1;
-                            }
-       
+                                nall_BDT_pt[i]=nall_BDT_pt[i]+1; // BDT eval > 0.1431 的 all bkg counts - pt
+                            }                       
                         } 
                     }
                     
@@ -543,11 +598,8 @@ void BDTClassificationApplication_eID( TString myMethodList = "" )
                         {
                             Nbimp[i]=4.0*i+2.0;
                             if((TMath::Abs(gflavor2)==2212 or TMath::Abs(gflavor2)==211 or TMath::Abs(gflavor2)==321) && (bimp>=Nbimp[i]-2.0) && bimp<(Nbimp[i]+2.0)) //plot for all 
-                            // if((TMath::Abs(gflavor2)==211) & (bimp>=Nbimp[i]-1.0) & bimp<(Nbimp[i]+1.0))  //plot for pi-
-                            // if((TMath::Abs(gflavor2)==321) & (bimp>=Nbimp[i]-1.0) & bimp<(Nbimp[i]+1.0))  //plot for K-
-                            // if((TMath::Abs(gflavor2)==2212) & (bimp>=Nbimp[i]-1.0) & bimp<(Nbimp[i]+1.0)) //plot for antiprotpn
                             { 
-                                nall_BDT_bimp[i]=nall_BDT_bimp[i]+1;
+                                nall_BDT_bimp[i]=nall_BDT_bimp[i]+1; // BDT eval > 0.1431 的 all bkg counts - bimp
                             }
        
                         } 
@@ -558,36 +610,41 @@ void BDTClassificationApplication_eID( TString myMethodList = "" )
                         pt_point[i]=i*2.0+2.0;
                         if(pt>(pt_point[i]-1.0) && pt<(pt_point[i]+1.0) )
                         {
-                            if(gflavor2==11) N_electron_pt_BDT[i]=N_electron_pt_BDT[i]+1;
+                            if(gflavor2==11) N_electron_pt_BDT[i]=N_electron_pt_BDT[i]+1; // electron counts - pt
                             if(select>0.1431)
                             {
-                                if(gflavor2==11) NEID_electron_pt_BDT[i]=NEID_electron_pt_BDT[i]+1;               
+                                if(gflavor2==11) NEID_electron_pt_BDT[i]=NEID_electron_pt_BDT[i]+1; // BDT eval > 0.1431 的 electron counts - pt               
                             }
+                            // electron effecience - pt: NEID_electron_pt_BDT / N_electron_pt_BDT
                         }
                     }
                     
+                    // check some diff cut 
                     for(int i=0;i<7;i++)
                     {
-                    if(W_antiproton && data_embed)Ncut_BDT[i]=i*0.1-0.3;//antiproton weight enmbed
-                    if(W_antiproton && data_single)Ncut_BDT[i]=i*0.1-0.245;//antiproton weight single
-                        if(W_pion)Ncut_BDT[i]=i*0.1-0.2; //pion weight
-                    if(W_all && data_embed)Ncut_BDT[i]=i*0.07-0.18; //all weight
-                    if(W_all && data_single)Ncut_BDT[i]=i*0.058-0.18; //all weight
-                    if(W_all_ecore && data_single)Ncut_BDT[i]=i*0.064-0.20; //all weight most=0.41
+                        // some cut value choose (loop to change the cut value)  
+                        if(W_antiproton && data_embed)  Ncut_BDT[i]=i*0.1-0.3;   // antiproton weight embed
+                        if(W_antiproton && data_single) Ncut_BDT[i]=i*0.1-0.245; // antiproton weight single
+                        if(W_pion) Ncut_BDT[i]=i*0.1-0.2; //pion weight
+                        if(W_all && data_embed)  Ncut_BDT[i]=i*0.07-0.18;  //all weight
+                        if(W_all && data_single) Ncut_BDT[i]=i*0.058-0.18; //all weight
+                        if(W_all_ecore && data_single) Ncut_BDT[i]=i*0.064-0.20; //all weight most=0.41
+                        
+                        // different cut S/B result
                         if(select>Ncut_BDT[i])
                         {
-                             //std::cout <<Ncut_BDT[i]<< "; BDT selected electrons" << std::endl;
-                             if(TMath::Abs(gflavor2)==11) nelectron_BDT[i]=nelectron_BDT[i]+1;
-                             if(TMath::Abs(gflavor2)==11) nSall_BDT[i]=nSall_BDT[i]+1;
-                             if(TMath::Abs(gflavor2)==211) npion_BDT[i]=npion_BDT[i]+1;
-                             if(TMath::Abs(gflavor2)==2212) nantiproton_BDT[i]=nantiproton_BDT[i]+1;
-                             if(TMath::Abs(gflavor2)==2212 or TMath::Abs(gflavor2)==211 or TMath::Abs(gflavor2)==321) nall_BDT[i]=nall_BDT[i]+1;
+                            //std::cout <<Ncut_BDT[i]<< "; BDT selected electrons" << std::endl;
+                            if(TMath::Abs(gflavor2)==11) nelectron_BDT[i]=nelectron_BDT[i]+1;
+                            if(TMath::Abs(gflavor2)==11) nSall_BDT[i]=nSall_BDT[i]+1;
+                            if(TMath::Abs(gflavor2)==211) npion_BDT[i]=npion_BDT[i]+1;
+                            if(TMath::Abs(gflavor2)==2212) nantiproton_BDT[i]=nantiproton_BDT[i]+1;
+                            if(TMath::Abs(gflavor2)==2212 or TMath::Abs(gflavor2)==211 or TMath::Abs(gflavor2)==321) nall_BDT[i]=nall_BDT[i]+1;
                             // std::cout << "nelectron_BDT= "<<nelectron_BDT[i]<< std::endl;
                             // std::cout << "nantiproton_BDT= "<<nantiproton_BDT[i]<< std::endl;
                         }
                         else
                         {
-                            //std::cout << "BDT selected background" << std::endl;
+                            // std::cout << "BDT selected background" << std::endl;
                             // if(gflavor2==-211) npion_BDT=npion_BDT+1;
                             // if(gflavor2==-2212) nantiproton_BDT=nantiproton_BDT+1;
                         }
@@ -599,7 +656,7 @@ void BDTClassificationApplication_eID( TString myMethodList = "" )
     } // file
 
     // efficiency calculation ---------------------------------------------------------------------------------------------
-    // 定义仅用于 BDT、SVM 和 DNN_CPU 的相关数组
+    // 定义仅用于 BDT 相关数组
     float efficiency_electron_BDT[10], efficiency_Sall_BDT[10], rejection_antiproton_BDT[10], rejection_pion_BDT[10], rejection_all_BDT[10];
     float err_efficiency_electron_BDT[10], err_efficiency_Sall_BDT[10], err_rejection_antiproton_BDT[10], err_rejection_pion_BDT[10], err_rejection_all_BDT[10];
     float SBratio_antiproton_BDT[10], SBratio_pion_BDT[10], SBratio_all_BDT[10];
@@ -659,46 +716,46 @@ void BDTClassificationApplication_eID( TString myMethodList = "" )
 
         if (N_electron_pt_BDT[i] > 0 && NEID_electron_pt_BDT[i] > 0) 
         {
-            cc_pt_N_BDT[i] = 1.0 * NEID_electron_pt_BDT[i] / N_electron_pt_BDT[i];
-            err_cc_pt_N_BDT[i] = 1.0 * TMath::Sqrt((1.0 / NEID_electron_pt_BDT[i] + 1.0 / N_electron_pt_BDT[i])) * cc_pt_N_BDT[i];
+            cc_pt_N_BDT[i] = 1.0 * NEID_electron_pt_BDT[i] / N_electron_pt_BDT[i]; // bdt electron eff - pt
+            err_cc_pt_N_BDT[i] = 1.0 * TMath::Sqrt((1.0 / NEID_electron_pt_BDT[i] + 1.0 / N_electron_pt_BDT[i])) * cc_pt_N_BDT[i]; // err of "bdt electron eff - pt"
         }
     }
 
     // -------------------------
-    // 3. BDT 方法的统计计算（假定相关变量如 nelectron_BDT、nSall_BDT、nantiproton_BDT、npion_BDT、nall_BDT 均已定义）
+    // 3. BDT diff cut 的统计 result
     for (int i = 0; i < 7; i++) 
     {
         if (Nelectron > 0 && nelectron_BDT[i] > 0) 
         {
-            efficiency_electron_BDT[i] = 1.0 * nelectron_BDT[i] / Nelectron;
+            efficiency_electron_BDT[i] = 1.0 * nelectron_BDT[i] / Nelectron; // bdt electron eff - diff cut value
             err_efficiency_electron_BDT[i] = 1.0 * TMath::Sqrt((1.0 / nelectron_BDT[i] + 1.0 / Nelectron)) * efficiency_electron_BDT[i];
         }
 
         if (NSall > 0 && nSall_BDT[i] > 0) 
         {
-            efficiency_Sall_BDT[i] = 1.0 * nSall_BDT[i] / NSall;
+            efficiency_Sall_BDT[i] = 1.0 * nSall_BDT[i] / NSall; // bdt signal eff - diff cut value
             err_efficiency_Sall_BDT[i] = 1.0 * TMath::Sqrt((1.0 / nSall_BDT[i] + 1.0 / NSall)) * efficiency_Sall_BDT[i];
         }
 
         if (Nantiproton > 0 && nantiproton_BDT[i] > 0) 
         {
-            rejection_antiproton_BDT[i] = 1.0 * Nantiproton / nantiproton_BDT[i];
+            rejection_antiproton_BDT[i] = 1.0 * Nantiproton / nantiproton_BDT[i]; // bdt 2212 rejection - diff cut value
             err_rejection_antiproton_BDT[i] = 1.0 * TMath::Sqrt((1.0 / Nantiproton + 1.0 / nantiproton_BDT[i])) * rejection_antiproton_BDT[i];
-            SBratio_antiproton_BDT[i] = 1.0 * nelectron_BDT[i] / TMath::Sqrt(nantiproton_BDT[i] + nelectron_BDT[i]);
+            SBratio_antiproton_BDT[i] = 1.0 * nelectron_BDT[i] / TMath::Sqrt(nantiproton_BDT[i] + nelectron_BDT[i]); // bdt 2212 S/B - diff cut value
         }
 
         if (Npion > 0 && npion_BDT[i] > 0) 
         {
-            rejection_pion_BDT[i] = 1.0 * Npion / npion_BDT[i];
+            rejection_pion_BDT[i] = 1.0 * Npion / npion_BDT[i]; // bdt 211 rejection - diff cut value
             err_rejection_pion_BDT[i] = 1.0 * TMath::Sqrt((1.0 / Npion + 1.0 / npion_BDT[i])) * rejection_pion_BDT[i];
-            SBratio_pion_BDT[i] = 1.0 * nelectron_BDT[i] / TMath::Sqrt(npion_BDT[i] + nelectron_BDT[i]);
+            SBratio_pion_BDT[i] = 1.0 * nelectron_BDT[i] / TMath::Sqrt(npion_BDT[i] + nelectron_BDT[i]); // bdt 211 S/B - diff cut value
         }
 
         if (Nall > 0 && nall_BDT[i] > 0) 
         {
-            rejection_all_BDT[i] = 1.0 * Nall / nall_BDT[i];
+            rejection_all_BDT[i] = 1.0 * Nall / nall_BDT[i]; // bdt all bkg rejection - diff cut value
             err_rejection_all_BDT[i] = 1.0 * TMath::Sqrt((1.0 / Nall + 1.0 / nall_BDT[i])) * rejection_all_BDT[i];
-            SBratio_all_BDT[i] = 1.0 * nSall_BDT[i] / TMath::Sqrt(nall_BDT[i] + nSall_BDT[i]);
+            SBratio_all_BDT[i] = 1.0 * nSall_BDT[i] / TMath::Sqrt(nall_BDT[i] + nSall_BDT[i]); // bdt all bkg S/B - diff cut value
         }
     }
 
