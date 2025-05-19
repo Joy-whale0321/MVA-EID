@@ -468,7 +468,7 @@ int TrkrCaloMandS::process_event(PHCompositeNode* topNode)
             // _ihcal_delta_eta.push_back((eta_center - _track_eta_ihc));
             // _ihcal_delta_phi.push_back(PiRange(phi_center - _track_phi_ihc));
 
-            std::cout << "etabin and phibin are: " << etabin << ", " << phibin <<std::endl;
+            // std::cout << "etabin and phibin are: " << etabin << ", " << phibin <<std::endl;
 
             // if (fabs(eta_center - _track_eta_ihc) > 0.05)
             // {
@@ -511,53 +511,11 @@ int TrkrCaloMandS::process_event(PHCompositeNode* topNode)
           
             if(fabs(dphi)<m_dphi_cut && fabs(dz)<m_dz_cut) // default: m_dphi_cut = 0.5, m_dz_cut = 20;
             {
-                // if(!ihcalState)
-                // {
-                //     continue;
-                // }
-                // else
-                // {
-                //     _track_phi_ihc = atan2(ihcalState->get_y(), ihcalState->get_x());
-                //     _track_eta_ihc = asinh(ihcalState->get_z()/sqrt(ihcalState->get_x()*ihcalState->get_x() + ihcalState->get_y()*ihcalState->get_y()));
-                //     num_ihcalstate += 1;
-
-                //     // // from track2ihcal
-                //     int etabin = IHCalGeo->get_etabin(_track_eta_ihc);
-                //     int phibin = IHCalGeo->get_phibin(_track_phi_ihc);
-
-                //     float eta_center = IHCalGeo->get_etacenter(etabin);
-                //     float phi_center = IHCalGeo->get_phicenter(phibin);
-
-                //     // if (fabs(eta_center - _track_eta_ihc) > 0.05)
-                //     // {
-                //     //     continue;
-                //     // }
-                //     if ((etabin==0||etabin==23)||(phibin==0||phibin==63))
-                //     {
-                //         continue;
-                //     }
-
-                //     _ihcal_delta_eta.push_back((eta_center - _track_eta_ihc));
-                //     _ihcal_delta_phi.push_back(PiRange(phi_center - _track_phi_ihc));
-
-                //     double energy = 0.;
-                //     energy = energy + ihcal_tower_e[etabin][phibin];
-                //     energy = energy + ihcal_tower_e[etabin][phibin-1];
-                //     energy = energy + ihcal_tower_e[etabin][phibin+1];
-                //     energy = energy + ihcal_tower_e[etabin-1][phibin];
-                //     energy = energy + ihcal_tower_e[etabin-1][phibin-1];
-                //     energy = energy + ihcal_tower_e[etabin-1][phibin+1];
-                //     energy = energy + ihcal_tower_e[etabin+1][phibin];
-                //     energy = energy + ihcal_tower_e[etabin+1][phibin-1];
-                //     energy = energy + ihcal_tower_e[etabin+1][phibin+1];
-
-                //     std::cout << "Energy at (" << etabin << ", " << phibin << ") = " << energy << std::endl;
-
-                //     // _ihcal_e.push_back();
-                // }
-
                 match_emc_cluster += 1;
                 // if(match_emc_cluster>1.1) std::cout << "match cluster > 1. "<< std::endl;
+
+                std::cout<<"EM temple cluster phi and eta: "<< _emcal_phi_tem << ", "<< _emcal_z_tem <<std::endl;
+                count_em_clusters += 1;
 
                 is_match = true;
 	            if (Verbosity() > 2)
@@ -571,7 +529,7 @@ int TrkrCaloMandS::process_event(PHCompositeNode* topNode)
             }
         }
 
-        /// Loop over the HCal(Topo) clusters ------------------------------------
+        // Loop over the HCal(Topo) clusters ------------------------------------
         RawCluster *cluster_topo = nullptr;
         RawClusterContainer::Range begin_end_TOPO = clustersTOPO->getClusters();
         RawClusterContainer::Iterator clusIter_TOPO;
@@ -583,15 +541,20 @@ int TrkrCaloMandS::process_event(PHCompositeNode* topNode)
                 continue;
             }
 
-            double caloRadiusTopo = 117;
+            double caloRadiusTopo = caloRadiusIHCal;
           
             float _topo_phi_tem = atan2(cluster_topo->get_y(), cluster_topo->get_x());
             float _topo_eta_tem = asinh(cluster_topo->get_z()/sqrt(cluster_topo->get_x()*cluster_topo->get_x() + cluster_topo->get_y()*cluster_topo->get_y()));
             float _topo_x_tem = cluster_topo->get_x();
             float _topo_y_tem = cluster_topo->get_y();
-            float radius_scale = caloRadiusTopo / sqrt(_topo_x_tem*_topo_x_tem+_topo_y_tem*_topo_y_tem);
+            double _topo_R = sqrt(_topo_x_tem*_topo_x_tem + _topo_y_tem*_topo_y_tem);
+
+            float radius_scale = caloRadiusTopo / _topo_R;
             float _topo_z_tem = radius_scale*cluster_topo->get_z();
             
+            bool em_on_topo = false;
+            bool ih_on_topo = false;
+            bool oh_on_topo = false;
             RawCluster::TowerConstRange towers = cluster_topo->get_towers();
             for (RawCluster::TowerConstIterator it = towers.first; it != towers.second; ++it)
             {
@@ -604,22 +567,51 @@ int TrkrCaloMandS::process_event(PHCompositeNode* topNode)
             
                 if (calo_id == RawTowerDefs::CEMC)
                 {
-                    std::cout << "EMCal tower: eta = " << ieta << ", phi = " << iphi << ", fraction = " << fraction << "\n";
+                    em_on_topo = true;
+                    // std::cout << "EMCal tower: eta = " << ieta << ", phi = " << iphi << ", fraction = " << fraction << "\n";
                 }
                 else if (calo_id == RawTowerDefs::HCALIN)
                 {
-                    std::cout << "IHCal tower: eta = " << ieta << ", phi = " << iphi << ", fraction = " << fraction << "\n";
+                    ih_on_topo = true;
+                    // std::cout << "IHCal tower: eta = " << ieta << ", phi = " << iphi << ", fraction = " << fraction << "\n";
                 }
                 else if (calo_id == RawTowerDefs::HCALOUT)
                 {
-                    std::cout << "OHCal tower: eta = " << ieta << ", phi = " << iphi << ", fraction = " << fraction << "\n";
+                    oh_on_topo = true;
+                    // std::cout << "OHCal tower: eta = " << ieta << ", phi = " << iphi << ", fraction = " << fraction << "\n";
                 }
             }
 
-            // float dphi = PiRange(_track_phi_emc - _topo_phi_tem);
-            // float dz = _track_z_emc - _topo_z_tem;
-        }
+            if(em_on_topo) 
+            {
+                float dphi = PiRange(_track_phi_emc - _topo_phi_tem);
+                float dz = _track_z_emc - _topo_z_tem;
+                if(fabs(dphi)<m_dphi_cut && fabs(dz)<m_dz_cut) 
+                {
+                    std::cout<<"EM topo cluster phi and eta: "<< _topo_phi_tem << ", "<< _topo_z_tem <<std::endl;
+                    count_topo_clusters += 1;
+                }
+            }
 
+            if (!oh_on_topo) continue;
+
+            std::cout << "TOPO cluster R is: " << _topo_R << std::endl;
+            
+            int match_topo_cluster = 0;
+            float dphi = PiRange(_track_phi_ihc - _topo_phi_tem);
+            float dz = _track_z_ihc - _topo_z_tem;
+            if(fabs(dphi)<m_dphi_cut && fabs(dz)<m_dz_cut) // default: m_dphi_cut = 0.5, m_dz_cut = 20;
+            {
+                match_topo_cluster += 1;
+                if(match_topo_cluster>1.1) std::cout << "match topo cluster > 1. "<< std::endl;
+
+                std::cout<<"corresponding topo cluster: "<<std::endl;
+                std::cout<<"topo x = "<<_topo_x_tem<<" , y = "<<_topo_y_tem<<" , z = "<<_topo_z_tem<<" , phi = "<<_topo_phi_tem<<" , eta = "<<_topo_eta_tem<<std::endl;
+                std::cout<<"track projected x = "<<_track_x_ihc<<" , y = "<<_track_y_ihc<<" , z = "<<_track_z_ihc<<" , phi = "<<_track_phi_ihc<<" , eta = "<<_track_eta_ihc<<std::endl;       
+            }
+ 
+            
+        }
 
         // 可以match 的 track存个svtxmap
         if(is_match)
@@ -693,6 +685,8 @@ void TrkrCaloMandS::event_file_start(std::ofstream &jason_file_header, std::stri
 //____________________________________________________________________________..
 int TrkrCaloMandS::End(PHCompositeNode *topNode)
 {
+    std::cout << "count clus num is: "<< count_em_clusters << ", " << count_topo_clusters << std::endl;
+
     file_4mva -> cd();
     tree_4mva -> Write();
     h2etaphibin->Write();
@@ -703,33 +697,6 @@ int TrkrCaloMandS::End(PHCompositeNode *topNode)
     std::cout << "TrkrCaloMandS::End(PHCompositeNode *topNode) Endding" << std::endl;
     return Fun4AllReturnCodes::EVENT_OK;
 }
-
-// //____________________________________________________________________________..
-// int TrkrCaloMandS::ResetEvent(PHCompositeNode *topNode)
-// {
-//     std::cout << "TrkrCaloMandS::ResetEvent(PHCompositeNode *topNode) Resetting internal structures, prepare for next event" << std::endl;
-
-//     _track_ptq.clear();
-//     _track_pt.clear();
-//     _track_px.clear();
-//     _track_py.clear();
-//     _track_pz.clear();
-
-//     _track_px_emc.clear();
-//     _track_py_emc.clear();
-//     _track_pz_emc.clear();
-
-//     _emcal_e.clear();
-//     _emcal_phi.clear();
-//     _emcal_eta.clear();
-//     _emcal_x.clear();
-//     _emcal_y.clear();
-//     _emcal_z.clear();
-//     _emcal_ecore.clear();
-//     _emcal_chi2.clear();
-//     _emcal_prob.clear();
-//     // std::cout<<"TrkrCaloMandS::ResetEvent"<<std::endl;
-// }
 
 
 void TrkrCaloMandS::Fill_Match_Info_TrkCalo(SvtxTrack* track_matched, SvtxTrackState *cemcState_matched, RawCluster *EMcluster_matched)
@@ -779,10 +746,6 @@ void TrkrCaloMandS::Fill_calo_tower(PHCompositeNode *topNode, std::string calori
             {
                 ihcal_tower_e[etabin][phibin] = towE;
                 // std::cout<<"towE is: "<<towE<<std::endl;  
-                if (towE > 0.030)
-                { 
-                    std::cout<<"towE is: "<<towE<<", corre etaphi bin is: "<<etabin<<", "<<phibin<<std::endl;  
-                }
             } 
             else if (calorimeter == "HCALOUT") 
             {

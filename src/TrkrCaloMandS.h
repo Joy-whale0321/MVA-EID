@@ -117,6 +117,9 @@ class TrkrCaloMandS : public SubsysReco
  private:
     bool checkTrack(SvtxTrack* track);
 
+    int count_em_clusters = 0;
+    int count_topo_clusters = 0;
+
     int m_runNumber = 0;
     int m_evtNumber = 0;
     bool m_use_emcal_radius = false;

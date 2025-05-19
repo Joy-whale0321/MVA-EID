@@ -94,15 +94,17 @@ R__LOAD_LIBRARY(libepd.so)
 R__LOAD_LIBRARY(libzdcinfo.so)
 
 void Fun4All_MVAeID_PICO_production(
-    const int nEvents = 5,
+    const int nEvents = 10,
     const std::string tpcfilename = "clusters_seeds_53744-0-0.root_dst.root",
     const std::string tpcdir = "/sphenix/user/jzhang1/TrackProduction/Reconstructed/",
+    // const std::string calofilename = "DST_CALO_run2pp_ana462_2024p012_v001-00050905-00001.root",
+    // const std::string calodir = "/sphenix/lustre01/sphnxpro/production/run2pp/physics/ana462_2024p012_v001/DST_CALO/run_00050900_00051000/dst/",
     const std::string calofilename = "DST_CALO_run2pp_ana462_2024p010_v001-00053744-00000.root",
     const std::string calodir = "/sphenix/lustre01/sphnxpro/production/run2pp/physics/ana462_2024p010_v001/DST_CALO/run_00053700_00053800/dst/",
     const std::string outfilename = "clusters_seeds",
     const std::string outdir = "./root",
     const int runnumber = 53744,
-    const int segment = 0,
+    const int segment = 1,
     const int index = 0,
     const int stepsize = 10)
 {
@@ -126,7 +128,7 @@ void Fun4All_MVAeID_PICO_production(
     std::string theOutfile = outfile.Data();
 
     auto se = Fun4AllServer::instance();
-    se->Verbosity(2);
+    se->Verbosity(1);
     auto rc = recoConsts::instance();
     rc->set_IntFlag("RUNNUMBER", runnumber);
     rc->set_IntFlag("RUNSEGMENT", segment);
@@ -141,7 +143,6 @@ void Fun4All_MVAeID_PICO_production(
     std::string mvtx_misalign_path = CDBInterface::instance()->getUrl("MVTX_MISALIGNMENT");
     std::cout << "MVTX misalignment path: " << mvtx_misalign_path << std::endl;
 
-
     Fun4AllRunNodeInputManager *ingeo = new Fun4AllRunNodeInputManager("GeoIn");
     ingeo->AddFile(geofile);
     se->registerInputManager(ingeo);
@@ -154,7 +155,7 @@ void Fun4All_MVAeID_PICO_production(
     se->registerInputManager(hitsin_track);
 
     auto hitsin_calo = new Fun4AllDstInputManager("DSTin_calo");
-    hitsin_calo->fileopen(inputCaloFile);
+    hitsin_calo->fileopen(inputCaloFile);  // /sphenix/lustre01/sphnxpro/production/run2pp/physics/ana462_2024p010_v001/DST_CALO/run_00053700_00053800/dst/DST_CALO_run2pp_ana462_2024p010_v001-00053744-00000.root
     se->registerInputManager(hitsin_calo);
 
     Global_Reco();
@@ -166,7 +167,7 @@ void Fun4All_MVAeID_PICO_production(
     {
         projection->setLayerRadius(SvtxTrack::CEMC, new_cemc_rad);
     }
-    float new_ihcal_rad = 117.; // ihcal radius
+    float new_ihcal_rad = 127.; // ihcal radius
     projection->setLayerRadius(SvtxTrack::HCALIN, new_ihcal_rad);
     se->registerSubsystem(projection);
 
@@ -199,12 +200,12 @@ void Fun4All_MVAeID_PICO_production(
     //For particle flow studies
     RawClusterBuilderTopo* ClusterBuilder2 = new RawClusterBuilderTopo("EMcalRawClusterBuilderTopo2");
     ClusterBuilder2->Verbosity(0);
-    ClusterBuilder2->set_nodename("TOPOCLUSTER_HCAL");
-    ClusterBuilder2->set_enable_HCal(true);
+    ClusterBuilder2->set_nodename("TOPOCLUSTER_EMIOHCAL");
+    ClusterBuilder2->set_enable_HCal(false);
     ClusterBuilder2->set_enable_EMCal(true);
-    //ClusterBuilder2->set_noise(0.0025, 0.006, 0.03);
-    ClusterBuilder2->set_noise(0.01, 0.03, 0.03);
-    ClusterBuilder2->set_significance(4.0, 2.0, 1.0);
+    ClusterBuilder2->set_noise(0.0025, 0.006, 0.03);
+    // ClusterBuilder2->set_noise(0.01, 0.03, 0.03);
+    ClusterBuilder2->set_significance(2.7, 1.5, 1.0);
     ClusterBuilder2->allow_corner_neighbor(true);
     ClusterBuilder2->set_do_split(true);
     ClusterBuilder2->set_minE_local_max(1.0, 2.0, 0.5);
@@ -229,7 +230,7 @@ void Fun4All_MVAeID_PICO_production(
     tcm->setTrackQuality(1000);
     tcm->setRawClusContEMName("CLUSTERINFO_CEMC"); // CLUSTERINFO_CEMC - RawClusterBuilderTemplate
     tcm->setRawTowerGeomContName("TOWERGEOM_CEMCv3");
-    tcm->setRawClusContTOPOName("EMcalRawClusterBuilderTopo2");
+    tcm->setRawClusContTOPOName("TOPOCLUSTER_EMIOHCAL");
     se->registerSubsystem(tcm);
 
     // TString photonconv_kfp_likesign_outfile = theOutfile + "_photonconv_kfp_likesign.root";
@@ -239,8 +240,6 @@ void Fun4All_MVAeID_PICO_production(
     se->run(nEvents);
     se->End();
     se->PrintTimer();
-
-    // std::cout<<"444444444444444444444444"<<std::endl;
 
     ifstream file_DataStore_string(DataStore_string.c_str(), ios::binary | ios::ate);
     if (file_DataStore_string.good() && (file_DataStore_string.tellg() > 100))
